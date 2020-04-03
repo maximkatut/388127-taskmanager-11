@@ -1,6 +1,7 @@
 import {createSiteMenuTemplate} from "./components/menu.js";
 import {createFilterTemplate} from "./components/filter.js";
 import {createBoardTemplate} from "./components/board.js";
+import {createSortTemplate} from "./components/sort.js";
 import {createTaskTemplate} from "./components/task.js";
 import {createTaskEditTemplate} from "./components/taskedit.js";
 import {createLoadMoreButtonTemplate} from "./components/load-more-button.js";
@@ -21,6 +22,7 @@ render(siteMainElement, createBoardTemplate());
 const taskListElement = siteMainElement.querySelector(`.board__tasks`);
 const boardElement = siteMainElement.querySelector(`.board`);
 
+render(boardElement, createSortTemplate(), `afterbegin`);
 render(taskListElement, createTaskEditTemplate());
 
 for (let i = 0; i < TASK_COUNT; i++) {
