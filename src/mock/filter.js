@@ -4,50 +4,26 @@ const filterNames = [
   `all`, `overdue`, `today`, `favorites`, `repeating`, `archive`
 ];
 
-const getOverdueFilterCount = () => {
-  let counter = 0;
-  tasks.forEach((it) => {
-    if (it.dueDate instanceof Date && it.dueDate < Date.now()) {
-      counter++;
-    }
-  });
-  return counter;
+const overdueExpression = (it) => {
+  return it.dueDate instanceof Date && it.dueDate < Date.now();
+};
+const todayExpression = (it) => {
+  return it.dueDate instanceof Date && it.dueDate.getDate() === new Date().getDate();
+};
+const favoriteExpression = (it) => {
+  return it.isFavorite;
+};
+const repeatingExpression = (it) => {
+  return Object.values(it.repeatingDays).some(Boolean);
+};
+const archiveExpression = (it) => {
+  return it.isArchive;
 };
 
-const getTodayFilterCount = () => {
+const countFilter = (cb) => {
   let counter = 0;
   tasks.forEach((it) => {
-    if (it.dueDate instanceof Date && it.dueDate.getDate() === new Date().getDate()) {
-      counter++;
-    }
-  });
-  return counter;
-};
-
-const getFavoriteFilterCount = () => {
-  let counter = 0;
-  tasks.forEach((it) => {
-    if (it.isFavorite) {
-      counter++;
-    }
-  });
-  return counter;
-};
-
-const getRepeatingFilterCount = () => {
-  let counter = 0;
-  tasks.forEach((it) => {
-    if (Object.values(it.repeatingDays).some(Boolean)) {
-      counter++;
-    }
-  });
-  return counter;
-};
-
-const getArchiveFilterCount = () => {
-  let counter = 0;
-  tasks.forEach((it) => {
-    if (it.isArchive) {
+    if (cb(it)) {
       counter++;
     }
   });
@@ -58,11 +34,11 @@ export const generateFilters = () => {
   return filterNames.map((it, i) => {
     const filterCounts = [
       tasks.length,
-      getOverdueFilterCount(),
-      getTodayFilterCount(),
-      getFavoriteFilterCount(),
-      getRepeatingFilterCount(),
-      getArchiveFilterCount(),
+      countFilter(overdueExpression),
+      countFilter(todayExpression),
+      countFilter(favoriteExpression),
+      countFilter(repeatingExpression),
+      countFilter(archiveExpression),
     ];
     return {
       title: it,
