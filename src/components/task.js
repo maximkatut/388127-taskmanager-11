@@ -1,7 +1,7 @@
 import {MONTH_NAMES} from "../const.js";
-import {formatTime} from "../utils.js";
+import {formatTime, formatMonth} from "../utils.js";
 
-const createTaskMarkup = (task) => {
+export const createTaskTemplate = (task) => {
   const {description, dueDate, repeatingDays, color, isFavorite, isArchive} = task;
 
   const isExpired = dueDate instanceof Date && dueDate < Date.now();
@@ -11,7 +11,7 @@ const createTaskMarkup = (task) => {
   const archiveButtonInactiveClass = isArchive ? `` : `card__btn--disabled`;
   const favoriteButtonInactiveClass = isFavorite ? `` : `card__btn--disabled`;
 
-  const date = isDateShowing ? `${dueDate.getDate()} ${MONTH_NAMES[dueDate.getMonth()]}` : ``;
+  const date = isDateShowing ? formatMonth(dueDate, MONTH_NAMES) : ``;
   const time = isDateShowing ? formatTime(dueDate) : ``;
 
   return `<article class="card card--${color} ${repeatClass} ${deadlineClass}">
@@ -59,6 +59,3 @@ const createTaskMarkup = (task) => {
   </article>`;
 };
 
-export const createTaskTemplate = (task) => {
-  return createTaskMarkup(task);
-};

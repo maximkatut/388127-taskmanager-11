@@ -1,48 +1,25 @@
-import {tasks} from "../main.js";
 
-const filterNames = [
-  `all`, `overdue`, `today`, `favorites`, `repeating`, `archive`
+const filters = [
+  {name: `all`, rule: () => true},
+  {name: `overdue`, rule: (task) => task.dueDate instanceof Date && task.dueDate < Date.now()},
+  {name: `today`, rule: (task) => task.dueDate instanceof Date && task.dueDate.getDate() === new Date().getDate()},
+  {name: `favorites`, rule: (task) => task.isFavorite},
+  {name: `repeating`, rule: (task) => Object.values(task.repeatingDays).some(Boolean)},
+  {name: `archive`, rule: (task) => task.isArchive},
 ];
 
-const overdueExpression = (it) => {
-  return it.dueDate instanceof Date && it.dueDate < Date.now();
-};
-const todayExpression = (it) => {
-  return it.dueDate instanceof Date && it.dueDate.getDate() === new Date().getDate();
-};
-const favoriteExpression = (it) => {
-  return it.isFavorite;
-};
-const repeatingExpression = (it) => {
-  return Object.values(it.repeatingDays).some(Boolean);
-};
-const archiveExpression = (it) => {
-  return it.isArchive;
-};
+export const generateFilters = (tasks) => {
+  return filters.map((filter) => {
+    const count = tasks.reduce((acc, task) => {
+      if (filter.rule(task)) {
+        return acc + 1;
+      }
+      return acc;
+    }, 0);
 
-const countFilter = (cb) => {
-  let counter = 0;
-  tasks.forEach((it) => {
-    if (cb(it)) {
-      counter++;
-    }
-  });
-  return counter;
-};
-
-export const generateFilters = () => {
-  return filterNames.map((it, i) => {
-    const filterCounts = [
-      tasks.length,
-      countFilter(overdueExpression),
-      countFilter(todayExpression),
-      countFilter(favoriteExpression),
-      countFilter(repeatingExpression),
-      countFilter(archiveExpression),
-    ];
     return {
-      title: it,
-      count: filterCounts[i],
+      title: filter.name,
+      count,
     };
   });
 };
