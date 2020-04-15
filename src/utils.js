@@ -15,4 +15,11 @@ const formatMonth = (date, monthNames) => {
   return `${date.getDate()} ${monthNames[date.getMonth()]}`;
 };
 
-export {formatTime, formatMonth};
+const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
+};
+
+export {formatTime, formatMonth, createElement};

@@ -19,7 +19,7 @@ const render = (container, template, place = `beforeend`) => {
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
-export const tasks = generateTasks(TASK_COUNT);
+const tasks = generateTasks(TASK_COUNT);
 const filters = generateFilters(tasks);
 
 render(siteHeaderElement, createSiteMenuTemplate());
