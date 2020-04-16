@@ -37,14 +37,15 @@ export default class Menu {
     this._element = null;
   }
 
-  getTamplate() {
+  getTemplate() {
     return createSiteMenuTemplate();
   }
 
   getElement() {
     if (!this._element) {
-      this._element = createElement(this.getTamplate());
+      this._element = createElement(this.getTemplate());
     }
+    return this._element;
   }
 
   removeElement() {

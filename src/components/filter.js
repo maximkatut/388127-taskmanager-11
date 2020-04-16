@@ -1,7 +1,7 @@
 import {createElement} from "../utils.js";
 
-const createFilterMarkup = (filter, isChecked) => {
-  const {title, count} = filter;
+const createFilterMarkup = (filter) => {
+  const {title, count, isChecked} = filter;
   return (
     `<input
       type="radio"
@@ -31,12 +31,12 @@ export default class Filter {
     this._element = null;
   }
 
-  getTamplate() {
+  getTemplate() {
     return createFilterTemplate(this._filters);
   }
 
   getElement() {
-    if (!this._filters) {
+    if (!this._element) {
       this._element = createElement(this.getTemplate());
     }
     return this._element;

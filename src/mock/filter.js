@@ -1,4 +1,3 @@
-
 const filters = [
   {name: `all`, rule: () => true},
   {name: `overdue`, rule: (task) => task.dueDate instanceof Date && task.dueDate < Date.now()},
@@ -20,6 +19,7 @@ export const generateFilters = (tasks) => {
     return {
       title: filter.name,
       count,
+      isChecked: Math.random() > 0.5,
     };
   });
 };
