@@ -1,5 +1,5 @@
 import {MONTH_NAMES} from "../const.js";
-import {formatTime, formatMonth} from "../utils.js";
+import {formatTime, formatMonth} from "../utils/common.js";
 import AbstractComponent from "./abstract-component.js";
 
 const createTaskTemplate = (task) => {
@@ -67,5 +67,10 @@ export default class Task extends AbstractComponent {
 
   getTemplate() {
     return createTaskTemplate(this._task);
+  }
+
+  setEditButtonClickHandler(handler) {
+    this.getElement().querySelector(`.card__btn--edit`)
+      .addEventListener(`click`, handler);
   }
 }
