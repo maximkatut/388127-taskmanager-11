@@ -3,6 +3,7 @@ import FilterComponent from "./components/filter.js";
 import BoardComponent from "./components/board.js";
 import SortComponent from "./components/sort.js";
 import TaskComponent from "./components/task.js";
+import NoTasksComponent from "./components/no-tasks.js";
 import TaskEditComponent from "./components/taskedit.js";
 import TasksComponent from "./components/tasks.js";
 import LoadMoreButtonComponent from "./components/load-more-button.js";
@@ -15,27 +16,47 @@ const SHOWING_TASKS_COUNT_ON_START = 8;
 const SHOWING_TASKS_COUNT_BY_BUTTON = 8;
 
 const renderTask = (taskListElement, task) => {
-  const onEditButtonClick = () => {
+  const replaceTaskToEdit = () => {
     taskListElement.replaceChild(taskEditComponent.getElement(), taskComponent.getElement());
   };
 
-  const onEditFormSubmit = (evt) => {
-    evt.preventDefault();
+  const replaceEditToTask = () => {
     taskListElement.replaceChild(taskComponent.getElement(), taskEditComponent.getElement());
+  };
+
+  const onKeyDown = (evt) => {
+    const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
+
+    if (isEscKey) {
+      replaceEditToTask();
+      document.removeEventListener(`keydown`, onKeyDown);
+    }
   };
 
   const taskComponent = new TaskComponent(task);
   const editButton = taskComponent.getElement().querySelector(`.card__btn--edit`);
-  editButton.addEventListener(`click`, onEditButtonClick);
+  editButton.addEventListener(`click`, () => {
+    replaceTaskToEdit();
+    document.addEventListener(`keydown`, onKeyDown);
+  });
 
   const taskEditComponent = new TaskEditComponent(task);
   const editForm = taskEditComponent.getElement().querySelector(`form`);
-  editForm.addEventListener(`submit`, onEditFormSubmit);
+  editForm.addEventListener(`submit`, () => {
+    replaceEditToTask();
+    document.removeEventListener(`keydown`, onKeyDown);
+  });
 
   render(taskListElement, taskComponent.getElement(), RenderPosition.BEFOREEND);
 };
 
 const renderBoard = (boardComponent, tasks) => {
+  const isAllTasksArchived = tasks.every((task) => task.isArchive);
+
+  if (isAllTasksArchived) {
+    render(boardComponent.getElement(), new NoTasksComponent().getElement(), RenderPosition.BEFOREEND);
+    return;
+  }
   render(boardComponent.getElement(), new SortComponent().getElement(), RenderPosition.BEFOREEND);
   render(boardComponent.getElement(), new TasksComponent().getElement(), RenderPosition.BEFOREEND);
 
