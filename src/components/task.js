@@ -1,5 +1,4 @@
-import {MONTH_NAMES} from "../const.js";
-import {formatTime, formatMonth} from "../utils/common.js";
+import {formatTime, formatDate} from "../utils/common.js";
 import AbstractComponent from "./abstract-component.js";
 
 const createTaskTemplate = (task) => {
@@ -12,7 +11,7 @@ const createTaskTemplate = (task) => {
   const archiveButtonInactiveClass = isArchive ? `` : `card__btn--disabled`;
   const favoriteButtonInactiveClass = isFavorite ? `` : `card__btn--disabled`;
 
-  const date = isDateShowing ? formatMonth(dueDate, MONTH_NAMES) : ``;
+  const date = isDateShowing ? formatDate(dueDate) : ``;
   const time = isDateShowing ? formatTime(dueDate) : ``;
 
   return `<article class="card card--${color} ${repeatClass} ${deadlineClass}">
